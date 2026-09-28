@@ -110,6 +110,9 @@ export class SkinnerEngine {
   async start() {
     const sup = SkinnerEngine.isSupported();
     if (!sup.ok) { this.fail(sup.reason, 'This browser cannot run camera AR.'); return; }
+    // start downloads immediately so they overlap with the camera permission prompt
+    if (this.o.profile.renderMode === 'model' && this.o.modelUrl) loadModel(this.o.modelUrl).catch(() => {});
+    const trackerP = this.loadTracker(); trackerP.catch(() => {});
     this.buildDom();
     this.o.onStage?.('camera');
     try { await this.openCamera(); } catch (e) { this.cameraError(e); return; }
@@ -117,7 +120,7 @@ export class SkinnerEngine {
     this.o.onStage?.('model', 'Loading 3D product…');
     try { await this.buildContent(); } catch (e) { console.error(e); this.fail('model_failed', 'The 3D product could not be loaded.'); return; }
     this.o.onStage?.('tracker', 'Starting AR…');
-    try { await this.loadTracker(); } catch (e) { console.error(e); this.fail(navigator.onLine ? 'tracker_failed' : 'network', 'The tracking model could not be loaded.'); return; }
+    try { await trackerP; } catch (e) { console.error(e); this.fail(navigator.onLine ? 'tracker_failed' : 'network', 'The tracking model could not be loaded.'); return; }
     if (this.destroyed) return;
     this.running = true;
     this.o.onStage?.('running');
@@ -281,6 +284,7 @@ export class SkinnerEngine {
     if (t === 'hand') { const r = await createHandLandmarker(1); this.hand = r.task; this.delegate = r.delegate; }
     if (t === 'face') { const r = await createFaceLandmarker(); this.face = r.task; this.delegate = r.delegate; }
     if (t === 'pose') { const r = await createPoseLandmarker(); this.pose = r.task; this.delegate = r.delegate; }
+    if (this.destroyed) { this.hand?.close(); this.face?.close(); this.pose?.close(); this.hand = this.face = this.pose = null as never; }
   }
 
   private detect(now: number): S.AnchorSolution | null {
