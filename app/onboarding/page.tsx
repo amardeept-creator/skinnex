@@ -12,7 +12,7 @@ export default async function Onboarding() {
   if (b) redirect('/dashboard');
   return (
     <div style={{ minHeight: '100dvh', background: 'var(--aura), var(--bg)' }}>
-      <div className="container" style={{ padding: '24px 0' }}><Link href="/"><Logo /></Link></div>
+      <div className="container" style={{ paddingBlock: '24px' }}><Link href="/"><Logo /></Link></div>
       <div className="container" style={{ maxWidth: 680, paddingBottom: 60 }}>
         <div className="row small" style={{ gap: 8, marginBottom: 18 }}><span className="badge badge-success">1 · Account ✓</span><span className="badge badge-dark">2 · Brand</span><span className="badge">3 · First Skinner</span></div>
         <h1 style={{ fontSize: 'clamp(34px, 5vw, 52px)' }}>Tell customers who you are</h1>

@@ -9,7 +9,7 @@ export function ProductGallery({ images, modelUrl, nails, config, tint, name }: 
   const [tab, setTab] = useState<number | '3d'>(0);
   return (
     <div className="stack" style={{ gap: 12 }}>
-      <div style={{ position: 'relative', aspectRatio: '1 / 1', borderRadius: 32, background: `radial-gradient(70% 60% at 50% 42%, #fff, ${tint})`, overflow: 'hidden', border: '1px solid var(--line)' }}>
+      <div className="pdp-media" style={{ position: 'relative', aspectRatio: '1 / 1', borderRadius: 32, background: `radial-gradient(70% 60% at 50% 42%, #fff, ${tint})`, overflow: 'hidden', border: '1px solid var(--line)' }}>
         {tab === '3d' ? <Viewer3D url={modelUrl} nails={nails} config={config} style={{ position: 'absolute', inset: 0 }} label={`3D model of ${name}`} />
           : images[tab as number] ? <img src={images[tab as number].url} alt={images[tab as number].alt || name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', padding: '8%' }} />
           : <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center' }} className="muted">No image</div>}

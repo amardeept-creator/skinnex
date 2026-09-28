@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { Uploader } from './Uploader';
 import { Viewer3D } from '@/components/Viewer3D';
@@ -27,7 +26,7 @@ const COLOR_TAGS = ['gold', 'silver', 'rose', 'black', 'white', 'pink', 'red', '
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'INR', 'AED', 'CAD', 'AUD', 'JPY'];
 
 export function SkinnerWizard({ initial, brands, categories, assets: initialAssets, first, canEmbed, branding }: Props) {
-  const router = useRouter();
+  // (router intentionally unused for refresh — see save())
   const [step, setStep] = useState(initial.id ? 3 : 0);
   const [id, setId] = useState<string | undefined>(initial.id);
   const [status, setStatus] = useState(initial.status || 'draft');
@@ -91,8 +90,9 @@ export function SkinnerWizard({ initial, brands, categories, assets: initialAsse
     const r = await fetch(id ? `/api/skinners/${id}` : '/api/skinners', { method: id ? 'PUT' : 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload()) });
     const d = await r.json().catch(() => ({})); setBusy(false);
     if (!r.ok) { setErr(d.issues?.[0] ? `${d.issues[0].path}: ${d.issues[0].message}` : d.error || 'Could not save'); return null; }
+    // new Skinner: update the URL without refreshing (a refresh would remount the wizard and lose the current step)
     if (!id) { setId(d.id); window.history.replaceState(null, '', `/dashboard/skinners/${d.id}`); }
-    setSaved('Draft saved'); router.refresh(); return d.id;
+    setSaved('Draft saved'); return d.id;
   };
   const publish = async () => {
     const v = validateStep(5); if (v) { setErr(v); return; }
@@ -102,7 +102,7 @@ export function SkinnerWizard({ initial, brands, categories, assets: initialAsse
     const d = await r.json().catch(() => ({})); setBusy(false);
     if (!r.ok) { setErr(d.error || 'Could not publish'); return; }
     const g = await fetch(`/api/skinners/${sid}`).then(r => r.json());
-    setLinkSlug(g.skinner.link_slug); setStatus('published'); setStep(6); router.refresh();
+    setLinkSlug(g.skinner.link_slug); setStatus('published'); setStep(6);
   };
 
   const previewData: ARData = useMemo(() => ({
@@ -129,7 +129,7 @@ export function SkinnerWizard({ initial, brands, categories, assets: initialAsse
       <div className="wizard-steps" role="tablist">{STEPS.map((s, i) => <button key={s} role="tab" aria-selected={step === i} className={step === i ? 'on' : i < step ? 'done' : ''} onClick={() => go(i)} disabled={i === 6 && !linkSlug}><span className="n">{i < step ? '✓' : i + 1}</span>{s}</button>)}</div>
       {err && <div className="alert alert-danger" role="alert">{err}</div>}
 
-      <div style={{ display: 'grid', gridTemplateColumns: step >= 1 && step <= 3 ? 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))' : '1fr', gap: 20, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: step >= 1 && step <= 3 ? 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))' : 'minmax(0, 1fr)', gap: 20, alignItems: 'start' }}>
         <div className="card card-pad stack" style={{ gap: 18 }}>
           {step === 0 && (<>
             <h2 style={{ fontSize: 24 }}>Product information</h2>

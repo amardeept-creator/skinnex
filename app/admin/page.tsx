@@ -18,7 +18,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   return (
     <div style={{ minHeight: '100dvh' }}>
       <header className="site-header scrolled"><div className="container inner"><Link href="/"><Logo /></Link><span className="badge badge-dark">Admin</span><span className="spacer" /><Link href="/dashboard" className="btn btn-ghost btn-sm">Studio</Link></div></header>
-      <div className="container" style={{ padding: '24px 0 60px' }}>
+      <div className="container" style={{ paddingTop: 24, paddingBottom: 60 }}>
         <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>{TABS.map(t => <Link key={t} href={`/admin?tab=${t}`} className={`chip${tab === t ? ' active' : ''}`} style={{ textTransform: 'capitalize' }}>{t}</Link>)}</div>
         {tab !== 'overview' && tab !== 'plans' && <form className="row" style={{ marginBottom: 16, maxWidth: 420 }}><input type="hidden" name="tab" value={tab} /><input className="input" name="q" defaultValue={q} placeholder={`Search ${tab}…`} /><button className="btn btn-primary">Search</button></form>}
         {tab === 'overview' && <Overview />}

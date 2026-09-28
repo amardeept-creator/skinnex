@@ -6,7 +6,7 @@ const IMG: Record<string, string> = { jewellery: 'ring-solitaire', nails: 'nails
 export default async function Categories() {
   const cats = await listCategories();
   return (
-    <div className="container" style={{ padding: '32px 0 40px' }}>
+    <div className="container" style={{ paddingBlock: '32px 40px' }}>
       <div className="eyebrow">Browse by what you want to try</div>
       <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', marginTop: 8, marginBottom: 28 }}>Categories</h1>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: 18 }}>

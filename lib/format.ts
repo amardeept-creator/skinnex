@@ -6,7 +6,7 @@ export function formatDate(d: string | Date | null | undefined) {
   if (!d) return '—';
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(d));
 }
-export function formatBytes(n: number) { if (n < 1024) return `${n} B`; if (n < 1048576) return `${(n / 1024).toFixed(0)} KB`; return `${(n / 1048576).toFixed(1)} MB`; }
+export function formatBytes(n: number) { if (n < 1024) return `${n} B`; if (n < 1048576) return `${(n / 1024).toFixed(0)} KB`; if (n < 1073741824) return `${(n / 1048576).toFixed(1)} MB`; return `${+(n / 1073741824).toFixed(1)} GB`; }
 export function num(n: number | null | undefined) { return new Intl.NumberFormat('en-US').format(n ?? 0); }
 export function siteUrl() { return (process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')).replace(/\/$/, ''); }
 export const TRACKER_LABEL: Record<string, string> = {

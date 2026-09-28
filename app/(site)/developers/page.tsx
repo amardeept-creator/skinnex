@@ -4,7 +4,7 @@ export default function Dev() {
   const o = siteUrl();
   const code = (s: string) => <pre style={{ background: '#141118', color: '#e9e3ff', padding: 18, borderRadius: 16, overflowX: 'auto', fontSize: 13, lineHeight: 1.6 }}><code>{s}</code></pre>;
   return (
-    <div className="container" style={{ padding: '40px 0', maxWidth: 900 }}>
+    <div className="container" style={{ paddingBlock: '40px', maxWidth: 900 }}>
       <div className="eyebrow">For developers</div>
       <h1 style={{ fontSize: 'clamp(36px, 5vw, 60px)', marginTop: 8 }}>Put “Try it on” on any site</h1>
       <h2 style={{ fontSize: 24, marginTop: 36 }}>1 · Button (any plan)</h2>

@@ -8,7 +8,7 @@ export default function Privacy() {
     ['Model downloads', 'The tracking models are downloaded from Google’s public model storage (storage.googleapis.com) the first time you open a Skinner and are cached by your browser.'],
   ];
   return (
-    <div className="container" style={{ padding: '40px 0', maxWidth: 820 }}>
+    <div className="container" style={{ paddingBlock: '40px', maxWidth: 820 }}>
       <div className="eyebrow">Trust</div>
       <h1 style={{ fontSize: 'clamp(36px, 5vw, 60px)', marginTop: 8 }}>Your camera stays yours.</h1>
       <div className="stack" style={{ gap: 14, marginTop: 28 }}>{items.map(([t, d]) => <div key={t} className="card card-pad"><h3 style={{ fontSize: 20 }}>{t}</h3><p className="muted" style={{ marginTop: 6 }}>{d}</p></div>)}</div>

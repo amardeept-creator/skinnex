@@ -10,7 +10,7 @@ const STACK = [
 ];
 export default function How() {
   return (
-    <div className="container" style={{ padding: '40px 0', maxWidth: 980 }}>
+    <div className="container" style={{ paddingBlock: '40px', maxWidth: 980 }}>
       <div className="eyebrow">Body-part AR tracking engine</div>
       <h1 style={{ fontSize: 'clamp(36px, 5vw, 60px)', marginTop: 8 }}>How a Skinner stays on you</h1>
       <p className="muted" style={{ marginTop: 12, fontSize: 16, maxWidth: 700 }}>A Skinner = product + 3D/AR asset + body-part tracking + real-time anchoring + a public AR experience. Tracking is an estimate from a single camera: it works well in good light with the body part clearly visible, and is not perfect.</p>

@@ -53,7 +53,7 @@ export default async function ProductPage({ params }: { params: Params }) {
               <div className="row" style={{ flexWrap: 'wrap', gap: 8 }}>{p.variants.map((v: { id: string; name: string; color_hex: string | null }) => <span key={v.id} className="chip">{v.color_hex && <i style={{ width: 14, height: 14, borderRadius: 99, background: v.color_hex, border: '1px solid rgba(0,0,0,.1)' }} />}{v.name}</span>)}</div>
             </div>
           )}
-          {p.link_slug ? (
+          {p.link_slug ? (<>
             <div className="card card-pad" style={{ background: 'linear-gradient(135deg, #fff, #f4efff)', display: 'grid', gridTemplateColumns: '1fr auto', gap: 18, alignItems: 'center' }}>
               <div className="stack" style={{ gap: 10 }}>
                 <Link href={`/s/${p.link_slug}?src=discover`} className="btn btn-xl try-btn btn-block"><span className="lens" />Try Skinner</Link>
@@ -61,7 +61,8 @@ export default async function ProductPage({ params }: { params: Params }) {
               </div>
               <div className="hide-md stack" style={{ gap: 4, alignItems: 'center' }}><QrImage slug={p.link_slug} size={96} /><span className="tiny faint">Open on phone</span></div>
             </div>
-          ) : (
+            <div className="mobile-try"><Link href={`/s/${p.link_slug}?src=discover`} className="btn btn-lg try-btn btn-block"><span className="lens" />Try Skinner</Link></div>
+          </>) : (
             <div className="alert alert-warn"><I.eye size={18} /> Live AR isn’t available for this product right now. {p.model_url || nails ? 'You can still inspect it in 3D.' : ''}</div>
           )}
           <div className="row" style={{ flexWrap: 'wrap' }}>
