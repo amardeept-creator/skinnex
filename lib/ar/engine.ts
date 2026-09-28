@@ -75,7 +75,7 @@ export class SkinnerEngine {
   private cam: CamModel = { tanH: Math.tan(THREE.MathUtils.degToRad(25)), aspect: 16 / 9 };
   private view = { cw: 1, ch: 1, fullW: 1, fullH: 1, offX: 0, offY: 0, dpr: 1 };
   private lastSeen = 0; private firstSeen = 0; private trackedMs = 0; private acquiredFired = false; private tryonFired = false;
-  private trackState: TrackState = 'searching'; private opacity = 0; private hint: string | null = null;
+  private detGap = 33; private trackState: TrackState = 'searching'; private opacity = 0; private hint: string | null = null;
   private lastTs = 0; private raf = 0; private vfc = 0; private running = false; private lastFrameT = 0;
   private lastSolution: S.AnchorSolution | null = null;
   private fpsAcc = { n: 0, t: 0, det: 0 };
@@ -89,6 +89,7 @@ export class SkinnerEngine {
 
   constructor(o: EngineOptions) {
     this.o = o;
+    if (o.debug && typeof window !== "undefined") (window as unknown as Record<string, unknown>).__skinifyEngine = this; // debug-only inspection hook
     this.nails = nailDesignSchema.parse({ ...(o.config.nails || {}), ...(o.overrides?.nails || {}) });
     this.lips = lipDesignSchema.parse({ ...(o.config.lips || {}), ...(o.overrides?.lips || {}) });
     if (o.profile.tracker === 'surface' || o.profile.tracker === 'pose' && o.config.anchor === 'feet') this.facing = 'environment';
@@ -137,7 +138,7 @@ export class SkinnerEngine {
     Object.assign(this.stage.style, { position: 'absolute', inset: '0', overflow: 'hidden', transform: this.mirrored ? 'scaleX(-1)' : 'none', touchAction: 'none' });
     this.video = document.createElement('video');
     this.video.setAttribute('playsinline', ''); this.video.muted = true; this.video.autoplay = true;
-    Object.assign(this.video.style, { position: 'absolute', left: '0', top: '0', transformOrigin: '0 0' });
+    Object.assign(this.video.style, { position: 'absolute', left: '0', top: '0', transformOrigin: '0 0', maxWidth: 'none', maxHeight: 'none', objectFit: 'fill' });
     this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: (window.devicePixelRatio || 1) < 2, powerPreference: 'high-performance' });
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping; this.renderer.toneMappingExposure = 1.0;
@@ -150,7 +151,8 @@ export class SkinnerEngine {
     this.stage.append(this.video, this.overlay, this.renderer.domElement);
     c.appendChild(this.stage);
     const pm = new THREE.PMREMGenerator(this.renderer);
-    this.scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+    // heavily blurred room: sharp light panels mirrored straight back from front-facing surfaces look like white patches in AR
+    this.scene.environment = pm.fromScene(new RoomEnvironment(), 0.4).texture;
     this.key.position.set(0.3, 1, 0.6);
     this.scene.add(this.hemi, this.key, this.camera);
     this.ro = new ResizeObserver(() => this.layout()); this.ro.observe(c);
@@ -351,6 +353,7 @@ export class SkinnerEngine {
     const renderMode = this.o.profile.renderMode;
     if (sol) {
       if (this.trackState === 'lost' || this.trackState === 'searching') { this.filters.forEach(f => f.reset()); this.firstSeen = now; }
+      if (this.lastSeen && this.trackState !== 'lost' && this.trackState !== 'searching') this.detGap = this.detGap * 0.8 + Math.min(2000, now - this.lastSeen) * 0.2;
       this.lastSeen = now; this.lastSolution = sol;
       this.setTrack('tracking'); this.setHint(null);
       this.trackedMs += dt;
@@ -367,7 +370,8 @@ export class SkinnerEngine {
     } else {
       const since = now - this.lastSeen;
       if (this.trackState === 'tracking' && since > 0) this.setTrack('holding');
-      if (since > HOLD_MS) { this.opacity = Math.max(0, this.opacity - dt / FADE_MS); if (this.opacity === 0) this.setTrack(this.lastSeen ? 'lost' : 'searching'); }
+      // hold longer on slow devices so the Skinner doesn't flicker between detections (never floats: it stays at the last pose, then fades)
+      if (since > Math.max(HOLD_MS, Math.min(1500, this.detGap * 2.2))) { this.opacity = Math.max(0, this.opacity - dt / FADE_MS); if (this.opacity === 0) this.setTrack(this.lastSeen ? 'lost' : 'searching'); }
       if (since > HINT_AFTER_MS) this.setHint(this.lastSeen ? `Tracking lost — ${this.o.profile.hint.toLowerCase()}` : this.o.profile.hint);
       if (!this.lastSeen && now - (this.firstSeen || now) === 0) this.firstSeen = now;
     }
@@ -450,7 +454,7 @@ export class SkinnerEngine {
       r += R; g += G; b += B; lx += ((i % 16) / 15 - 0.5) * L; ly += (Math.floor(i / 16) / 15 - 0.5) * L; lt += L;
     }
     r /= 256; g /= 256; b /= 256; const lum = lt / 256 / 255;
-    const env = THREE.MathUtils.clamp(0.45 + lum * 1.4, 0.45, 1.5);
+    const env = THREE.MathUtils.clamp(0.25 + lum * 0.6, 0.25, 0.75);
     this.scene.environmentIntensity = THREE.MathUtils.lerp(this.scene.environmentIntensity ?? 1, env, 0.5);
     const tint = new THREE.Color(r / 255, g / 255, b / 255); const m = Math.max(tint.r, tint.g, tint.b, 0.01); tint.multiplyScalar(1 / m).lerp(new THREE.Color(1, 1, 1), 0.6);
     this.hemi.color.lerp(tint, 0.5); this.hemi.intensity = 0.3 + lum * 0.8;
