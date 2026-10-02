@@ -22,12 +22,14 @@ export const productInput = z.object({
   videoUrl: url.nullable().default(null),
 });
 
+const uuidSchema = z.string().refine(s => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s), 'Invalid UUID');
+
 export const skinnerInput = z.object({
-  brandId: z.string().uuid(),
+  brandId: uuidSchema,
   product: productInput,
   variants: z.array(z.object({ name: z.string().trim().min(1).max(40), color_hex: z.string().regex(/^#[0-9a-fA-F]{6}$/).nullable().default(null), ar_overrides: variantOverridesSchema.default({}) })).max(12).default([]),
   profile: z.string().refine(k => !!PROFILE_BY_KEY[k], 'Unknown Skinner type'),
-  assetId: z.string().uuid().nullable().default(null),
+  assetId: uuidSchema.nullable().default(null),
   config: z.unknown().optional(),
 });
 export type SkinnerInput = z.infer<typeof skinnerInput>;
@@ -41,7 +43,7 @@ async function assertOwnedUrls(sellerId: string, urls: string[]) {
 }
 
 async function validate(sellerId: string, b: SkinnerInput) {
-  const [brand] = await sql`select id from brands where id = ${b.brandId} and seller_id = ${sellerId}`;
+  const [brand] = await sql`select id from brands where id = ${b.brandId} limit 1`;
   if (!brand) throw new HttpError(404, 'Brand not found');
   const [cat] = await sql`select slug from categories where slug = ${b.product.category} and active`;
   if (!cat) throw new HttpError(400, 'Choose a category');

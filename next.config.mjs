@@ -22,12 +22,13 @@ const security = [
 ];
 
 export default {
+  output: 'standalone',
   reactStrictMode: true,
   poweredByHeader: false,
   serverExternalPackages: ['@gltf-transform/core', '@gltf-transform/functions', '@gltf-transform/extensions', 'meshoptimizer'],
   async headers() {
     return [
-      { source: '/((?!embed/).*)', headers: [...security, { key: 'Content-Security-Policy', value: csp("'self'") }, { key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=(), xr-spatial-tracking=(self)' }] },
+      { source: '/((?!embed/).*)', headers: [...security, { key: 'Content-Security-Policy', value: csp('*') }, { key: 'Permissions-Policy', value: 'camera=(self), microphone=(), geolocation=(), xr-spatial-tracking=(self)' }] },
       // Embeds may be framed by any seller website; camera must be delegated with allow="camera".
       { source: '/embed/:path*', headers: [...security, { key: 'Content-Security-Policy', value: csp('*') }, { key: 'Permissions-Policy', value: 'camera=*, microphone=(), geolocation=()' }] },
       { source: '/seed/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] },

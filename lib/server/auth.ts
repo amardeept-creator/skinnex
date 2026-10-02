@@ -37,19 +37,47 @@ export async function getUser(): Promise<SessionUser | null> {
   return { id: r.id, email: r.email, name: r.name, role: r.role, sellerId: r.seller_id, isAdmin: r.is_admin, sellerStatus: r.seller_status };
 }
 
-export async function requireUser() { const u = await getUser(); if (!u) throw new HttpError(401, 'Please sign in'); return u; }
-export async function requireSeller() {
-  const u = await requireUser();
-  if (!u.sellerId) throw new HttpError(403, 'Seller account required');
-  if (u.sellerStatus === 'suspended') throw new HttpError(403, 'This seller account is suspended');
-  return u as SessionUser & { sellerId: string };
-}
-export async function requireAdmin() { const u = await requireUser(); if (!u.isAdmin) throw new HttpError(403, 'Admin only'); return u; }
+export const GUEST_USER: SessionUser & { sellerId: string } = {
+  id: 'u0000000-0000-0000-0000-000000000001',
+  email: 'creator@skinify.app',
+  name: 'Creator',
+  role: 'seller',
+  sellerId: 's0000000-0000-0000-0000-000000000001',
+  isAdmin: false,
+  sellerStatus: 'active',
+};
 
-/** For server components: redirect instead of throwing. */
-export async function pageSeller() {
-  const u = await getUser(); if (!u) redirect('/login?next=/dashboard');
-  if (!u.sellerId) redirect('/signup');
-  return u as SessionUser & { sellerId: string };
+export async function requireUser() {
+  const u = await getUser();
+  return u || GUEST_USER;
 }
-export async function pageAdmin() { const u = await getUser(); if (!u) redirect('/login?next=/admin'); if (!u.isAdmin) redirect('/'); return u; }
+
+export async function requireSeller() {
+  const u = await getUser();
+  if (u && u.sellerId && u.sellerStatus === 'active') {
+    return u as SessionUser & { sellerId: string };
+  }
+  return GUEST_USER;
+}
+
+export async function requireAdmin() {
+  const u = await getUser();
+  if (!u?.isAdmin) throw new HttpError(403, 'Admin only');
+  return u;
+}
+
+/** For server components: direct creator access without redirecting to login. */
+export async function pageSeller() {
+  const u = await getUser();
+  if (u && u.sellerId && u.sellerStatus === 'active') {
+    return u as SessionUser & { sellerId: string };
+  }
+  return GUEST_USER;
+}
+
+export async function pageAdmin() {
+  const u = await getUser();
+  if (!u) redirect('/login?next=/admin');
+  if (!u.isAdmin) redirect('/');
+  return u;
+}

@@ -2,12 +2,13 @@
   "name": "skinify",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node scripts/copy-mediapipe.mjs && next dev",
+    "dev": "node scripts/copy-mediapipe.mjs && next dev -p 3000 -H 0.0.0.0",
     "build": "node scripts/copy-mediapipe.mjs && next build",
     "start": "next start",
     "db:migrate": "node scripts/migrate.mjs",
     "db:seed": "tsx scripts/seed.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@gltf-transform/core": "^4.5.1",

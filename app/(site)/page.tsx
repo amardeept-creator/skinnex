@@ -31,7 +31,7 @@ export default async function Home() {
             <p className="hero-lede">Discover products, create your own AR experiences, and see how they look on you.</p>
             <div className="row" style={{ marginTop: 30, flexWrap: 'wrap' }}>
               <Link href="/explore" className="btn btn-lg try-btn"><span className="lens" />Explore Skinners</Link>
-              <Link href="/brands" className="btn btn-lg btn-ghost">Create a Skinner</Link>
+              <Link href="/dashboard/skinners/new" className="btn btn-lg btn-ghost">Create a Skinner</Link>
             </div>
             <div className="row small muted" style={{ marginTop: 26, flexWrap: 'wrap', gap: 18 }}>
               <span className="row" style={{ gap: 6 }}><I.shield size={16} /> Camera stays on your device</span>
@@ -155,8 +155,8 @@ export default async function Home() {
           </div>
           <div className="row" style={{ marginTop: 28, flexWrap: 'wrap' }}>
             <span className="link-pill"><I.link size={16} />{new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").host}/s/diamond-ring</span>
-            <Link href="/signup" className="btn btn-lg" style={{ background: '#fff', color: 'var(--ink)' }}>Start free trial</Link>
-            <Link href="/pricing" className="btn btn-lg btn-ghost" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.2)' }}>See plans</Link>
+            <Link href="/dashboard/skinners/new" className="btn btn-lg" style={{ background: '#fff', color: 'var(--ink)' }}>Create a Skinner</Link>
+            <Link href="/explore" className="btn btn-lg btn-ghost" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.2)' }}>Explore</Link>
           </div>
         </div>
       </section>

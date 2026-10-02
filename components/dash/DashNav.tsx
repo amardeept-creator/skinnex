@@ -27,8 +27,12 @@ export function DashNav({ brand, user, plan }: { brand: { name: string; accent: 
         <div className="spacer" />
         <Link href={`/b/${brand.slug}`} className="nav-i" target="_blank"><I.eye size={18} />View public store</Link>
         {user.isAdmin && <Link href="/admin" className="nav-i"><I.shield size={18} />Admin</Link>}
-        <button className="nav-i" onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); router.push('/'); router.refresh(); }}><I.logout size={18} />Sign out</button>
-        <div className="tiny faint" style={{ padding: '8px 12px' }}>{user.email}</div>
+        {user.email !== 'creator@skinify.app' ? (
+          <button className="nav-i" onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); router.push('/'); router.refresh(); }}><I.logout size={18} />Sign out</button>
+        ) : (
+          <div className="tiny faint" style={{ padding: '8px 12px', color: 'var(--iris)' }}>Direct Creator Mode · No account needed</div>
+        )}
+        <div className="tiny faint" style={{ padding: '4px 12px 8px' }}>{user.email}</div>
       </aside>
     </>
   );

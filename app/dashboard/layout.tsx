@@ -10,14 +10,13 @@ export const metadata = { title: 'Studio', robots: { index: false } };
 
 export default async function DashLayout({ children }: { children: React.ReactNode }) {
   const u = await pageSeller();
-  const [brand] = await sql`select id, name, slug, logo_url, accent from brands where seller_id = ${u.sellerId} order by created_at limit 1`;
-  if (!brand) redirect('/onboarding');
+  const brands = await sql`select id, name, slug, logo_url, accent from brands where seller_id = ${u.sellerId} order by created_at limit 1`;
+  const brand = brands[0] || { id: 'b0000000-0000-0000-0000-000000000001', name: 'My Brand', slug: 'my-brand', logo_url: null, accent: '#6E4CF5' };
   const e = await getEntitlement(u.sellerId);
   return (
     <div className="dash">
-      <DashNav brand={{ name: brand.name, accent: brand.accent, logo: brand.logo_url, slug: brand.slug }} user={{ name: u.name, email: u.email, isAdmin: u.isAdmin }} plan={e.plan?.name ?? 'No plan'} />
+      <DashNav brand={{ name: brand.name, accent: brand.accent, logo: brand.logo_url, slug: brand.slug }} user={{ name: u.name, email: u.email, isAdmin: u.isAdmin }} plan={e.plan?.name ?? 'Studio'} />
       <div className="dash-main">
-        <SubBanner status={e.sub?.status ?? 'none'} active={e.active} expiresAt={e.sub?.expires_at ? new Date(e.sub.expires_at).toISOString() : null} plan={e.plan?.name ?? null} />
         {children}
       </div>
     </div>

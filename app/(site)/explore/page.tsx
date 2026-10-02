@@ -33,7 +33,7 @@ export default async function Explore({ searchParams }: { searchParams: SP }) {
           <div style={{ fontSize: 44 }} aria-hidden>◌</div>
           <h2 style={{ fontSize: 28, marginTop: 8 }}>{cat && !sp.q ? `No ${cat.name.toLowerCase()} Skinners yet` : 'Nothing matches that yet'}</h2>
           <p className="muted" style={{ marginTop: 8 }}>{cat && !sp.q ? 'Brands haven’t published any in this category. Check back soon — or create the first one.' : 'Try a broader search, a colour, or a different category.'}</p>
-          <div className="row" style={{ justifyContent: 'center', marginTop: 20 }}><Link href="/explore" className="btn btn-primary">Browse everything</Link>{cat && <Link href="/signup" className="btn btn-ghost">Create a Skinner</Link>}</div>
+          <div className="row" style={{ justifyContent: 'center', marginTop: 20 }}><Link href="/explore" className="btn btn-primary">Browse everything</Link>{cat && <Link href="/dashboard/skinners/new" className="btn btn-ghost">Create a Skinner</Link>}</div>
         </div>
       )}
       {total > page * 24 && <div className="row" style={{ justifyContent: 'center', marginTop: 28 }}><Link href={qs(page + 1)} className="btn btn-ghost">Load more</Link></div>}

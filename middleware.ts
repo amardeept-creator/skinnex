@@ -5,4 +5,4 @@ export function middleware(req: NextRequest) {
   if (!has) { const u = req.nextUrl.clone(); u.pathname = '/login'; u.searchParams.set('next', req.nextUrl.pathname); return NextResponse.redirect(u); }
   return NextResponse.next();
 }
-export const config = { matcher: ['/dashboard/:path*', '/admin/:path*', '/onboarding/:path*'] };
+export const config = { matcher: ['/admin/:path*'] };

@@ -32,12 +32,8 @@ export function SiteHeader({ user }: { user: { name: string; isSeller: boolean; 
           <div className="spacer" />
           <button className="search-trigger" onClick={() => setSearch(true)} aria-label="Search products"><I.search size={17} /> Search Skinners<kbd>⌘K</kbd></button>
           <button className="btn btn-ghost btn-icon btn-sm show-md" onClick={() => setSearch(true)} aria-label="Search"><I.search size={18} /></button>
-          {user?.isSeller
-            ? <Link href="/dashboard" className="btn btn-primary btn-sm">Dashboard</Link>
-            : <>
-                {!user && <Link href="/login" className="btn btn-ghost btn-sm hide-md">Sign in</Link>}
-                <Link href={user ? '/dashboard/skinners/new' : '/signup'} className="btn btn-primary btn-sm">Create Skinner</Link>
-              </>}
+          <Link href="/dashboard" className="btn btn-ghost btn-sm hide-md">Studio</Link>
+          <Link href="/dashboard/skinners/new" className="btn btn-primary btn-sm">Create Skinner</Link>
           {user?.isAdmin && <Link href="/admin" className="btn btn-ghost btn-sm hide-md">Admin</Link>}
         </div>
       </header>
@@ -46,7 +42,7 @@ export function SiteHeader({ user }: { user: { name: string; isSeller: boolean; 
         <Link href="/explore" className={is('/explore') || is('/categories')}><I.grid size={21} />Explore</Link>
         <Link href="/explore?sort=trending&ar=1" aria-label="Try trending Skinners"><span className="tab-try"><I.camera size={22} /></span></Link>
         <Link href="/saved" className={is('/saved')}><I.heart size={21} />Saved</Link>
-        <Link href={user?.isSeller ? '/dashboard' : '/brands'} className={is('/dashboard') || is('/brands')}><I.store size={21} />{user?.isSeller ? 'Studio' : 'Brands'}</Link>
+        <Link href="/dashboard" className={is('/dashboard')}><I.store size={21} />Studio</Link>
       </nav>
       {search && <SearchOverlay onClose={() => setSearch(false)} />}
     </>

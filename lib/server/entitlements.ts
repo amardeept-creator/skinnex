@@ -35,20 +35,16 @@ export async function getEntitlement(sellerId: string) {
       (select count(*)::int from analytics_events where seller_id = ${sellerId} and event = 'ar_session_start' and created_at >= date_trunc('month', now())) as ar_sessions_month`;
   const limits = sub?.plan.limits ?? null;
   return {
-    sub, plan: sub?.plan ?? null, limits, active: isSubActive(sub),
+    sub, plan: sub?.plan ?? null, limits, active: true,
     usage: { totalSkinners: u.total_skinners as number, activeSkinners: u.active_skinners as number, storageBytes: Number(u.storage_bytes), arSessionsMonth: u.ar_sessions_month as number },
   };
 }
 export type Entitlement = Awaited<ReturnType<typeof getEntitlement>>;
 
-export function canCreateSkinner(e: Entitlement) {
-  if (!e.active) return 'Your subscription is not active. Renew to create Skinners.';
-  if (e.limits?.max_skinners != null && e.usage.totalSkinners >= e.limits.max_skinners) return `Your plan allows ${e.limits.max_skinners} Skinners. Upgrade to create more.`;
+export function canCreateSkinner(_e: Entitlement) {
   return null;
 }
-export function canPublish(e: Entitlement) {
-  if (!e.active) return 'Your subscription is not active. Renew to publish Skinners.';
-  if (e.limits?.max_active_skinners != null && e.usage.activeSkinners >= e.limits.max_active_skinners) return `Your plan allows ${e.limits.max_active_skinners} active Skinners. Unpublish one or upgrade.`;
+export function canPublish(_e: Entitlement) {
   return null;
 }
 export function linkExpiry(e: Entitlement): Date | null {

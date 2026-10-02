@@ -1,0 +1,5 @@
+{
+  "name": "SKINIFY",
+  "description": "Real-time AR try-on platform for brands and products.",
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -11,7 +11,7 @@ export default function Brands() {
           <div className="eyebrow">SKINIFY for brands</div>
           <h1 style={{ marginTop: 16, fontSize: 'clamp(44px, 7vw, 96px)' }}>Let customers<br /><span className="soft">try it first.</span></h1>
           <p className="hero-lede">Upload your product and 3D model, choose where it tracks, preview it live, publish — and share one link everywhere your customers are.</p>
-          <div className="row" style={{ marginTop: 28, flexWrap: 'wrap' }}><Link href="/signup" className="btn btn-lg btn-primary">Start free trial</Link><Link href="/pricing" className="btn btn-lg btn-ghost">See plans</Link></div>
+          <div className="row" style={{ marginTop: 28, flexWrap: 'wrap' }}><Link href="/dashboard/skinners/new" className="btn btn-lg btn-primary">Create a Skinner</Link><Link href="/explore" className="btn btn-lg btn-ghost">Explore</Link></div>
           <p className="small faint" style={{ marginTop: 14 }}>No code. No app for your customers to install.</p>
         </div>
         <div className="hero-stage"><Viewer3D url="/seed/models/watch-meridian.glb" style={{ position: 'absolute', inset: 0 }} label="3D watch model" /><span className="tag badge badge-ar" style={{ top: 18, left: 18 }}><i />Your GLB, validated &amp; optimised</span></div>
@@ -30,7 +30,7 @@ export default function Brands() {
       <section className="container"><div className="dark-band" style={{ padding: 'clamp(28px, 5vw, 60px)' }}>
         <h2 style={{ fontSize: 'clamp(32px, 5vw, 60px)' }}>One link. Every channel.</h2>
         <div className="row" style={{ flexWrap: 'wrap', marginTop: 20, gap: 10 }}>{['Instagram bio', 'WhatsApp', 'Your website', 'Email', 'Ads', 'QR on packaging', 'In-store display', 'TikTok'].map(c => <span key={c} className="link-pill" style={{ fontFamily: 'inherit' }}>{c}</span>)}</div>
-        <div className="row" style={{ marginTop: 26, flexWrap: 'wrap' }}><Link href="/signup" className="btn btn-lg" style={{ background: '#fff', color: 'var(--ink)' }}>Create your first Skinner <I.arrow size={16} /></Link><Link href="/developers" className="btn btn-lg btn-ghost" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.2)' }}>Embed &amp; API</Link></div>
+        <div className="row" style={{ marginTop: 26, flexWrap: 'wrap' }}><Link href="/dashboard/skinners/new" className="btn btn-lg" style={{ background: '#fff', color: 'var(--ink)' }}>Create your first Skinner <I.arrow size={16} /></Link><Link href="/explore" className="btn btn-lg btn-ghost" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.2)' }}>Explore</Link></div>
       </div></section>
     </>
   );

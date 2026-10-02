@@ -9,7 +9,7 @@ export function Footer() {
           <p className="small muted" style={{ maxWidth: 260 }}>See it. Try it. Love it. Real-time AR try-on for products you love.</p>
         </div>
         <div className="stack" style={{ gap: 10 }}><div className="eyebrow">Discover</div><Link href="/explore">Explore</Link><Link href="/categories">Categories</Link><Link href="/explore?sort=new">New Skinners</Link><Link href="/saved">Saved</Link></div>
-        <div className="stack" style={{ gap: 10 }}><div className="eyebrow">For brands</div><Link href="/brands">Why SKINIFY</Link><Link href="/pricing">Pricing</Link><Link href="/signup">Create a Skinner</Link><Link href="/developers">SDK &amp; API</Link></div>
+        <div className="stack" style={{ gap: 10 }}><div className="eyebrow">For brands</div><Link href="/brands">Why SKINIFY</Link><Link href="/pricing">Pricing</Link><Link href="/dashboard/skinners/new">Create a Skinner</Link><Link href="/developers">SDK &amp; API</Link></div>
         <div className="stack" style={{ gap: 10 }}><div className="eyebrow">Trust</div><Link href="/privacy">Camera privacy</Link><Link href="/how-it-works">How AR works</Link><Link href="/login">Seller sign in</Link></div>
       </div>
       <div className="container tiny faint" style={{ marginTop: 40, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'space-between' }}>
